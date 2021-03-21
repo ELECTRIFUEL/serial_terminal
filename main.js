@@ -153,12 +153,18 @@ ipcMain.on("connectPort", (event, data) => {
       portObj= new serialport(data.port, { baudRate: data.boud, autoOpen: false });
       portObj.open(function (err) {
         if (err) {
-          portconfig.state=1
+          portConfig.state=1
         }else{
           portConfig.state=2
 
           portObj.on('data', function (data) {
-            console.log('Data:', data)
+            console.log('Data:', data.toString())
+            win.webContents.send('serialData', data.toString());
+          })
+
+          portObj.on('close', function() {
+            portConfig.state=0
+            win.webContents.send('connState', portConfig);
           })
         }
         win.webContents.send('connState', portConfig);
@@ -168,6 +174,40 @@ ipcMain.on("connectPort", (event, data) => {
     }  
   }
   event.returnValue = portConfig; // callback with a response for an asynchronous request
+});
+
+
+ipcMain.on("serialDataSend", (event, data) => {
+  var state = true;
+  if(portConfig.state==2){
+    try{
+      portObj.write(data, function (err){
+        if(err){
+          console.log(err)
+        }
+      })
+    }catch(e){
+      console.log(e)
+    }
+  }else{
+    var state = false;
+  }
+  event.returnValue = state; // callback with a response for an asynchronous request
+});
+
+
+
+ipcMain.on("disconnectPort", (event, data) => {
+  if(portConfig.state==2){
+    try{
+      portObj.close()
+      portObj = null;
+    }catch(e){
+
+    }
+  }
+  portConfig.state=0;
+  event.returnValue = true;
 });
 
 

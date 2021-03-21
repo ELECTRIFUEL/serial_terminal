@@ -19,10 +19,15 @@ $(document).ready(function(){
   })
 
   $("#connect").click(function() {
-       var selected = $('#com_port').find(":selected").text();
-       var boud = parseInt($('#com_boud').val())
-       conState = ipcRenderer.sendSync("connectPort", {"port":selected, "boud":boud})
-       console.log(conState)
+       conState = ipcRenderer.sendSync("connectPort", null)
+       if(conState.state!=2){
+         var selected = $('#com_port').find(":selected").text();
+         var boud = parseInt($('#com_boud').val())
+         conState = ipcRenderer.sendSync("connectPort", {"port":selected, "boud":boud})
+       }else{
+         ipcRenderer.sendSync("disconnectPort", null)
+       }
+       //console.log(conState)
   });
 
   ipcRenderer.on("connState", (event, data) =>{
@@ -31,6 +36,11 @@ $(document).ready(function(){
       console.log(conState)
       updatePortStatus(conState.state)
     }
+  })
+
+  ipcRenderer.on("serialData", (event, data) =>{
+    //console.log(data)
+    appendData(data)
   })
 
   $("#sendData").click(function() {
@@ -76,6 +86,8 @@ $(document).keydown( function( e ) {
 
 
 function appendData(data){
+
+
   var data1 = $("#serialData").html()
   //console.log("start")
   for(var i=0;i<data.length;i++){
@@ -86,6 +98,11 @@ function appendData(data){
     }
   }
   $("#serialData").html(data1)
+  var autoscroll = true;
+  if(autoscroll){
+    var objDiv = document.getElementById("dataArea");
+    objDiv.scrollTop = objDiv.scrollHeight;
+  }
 }
 
 
@@ -101,8 +118,9 @@ function sendData(){
   }else if(end==3){
    data += "\r\n"
   }
-  console.log(data)
-  appendData(data)
+  //console.log(data)
+  //appendData(data)
+  ipcRenderer.sendSync("serialDataSend", data)
   $("#sendtext").val("")
 }
 
