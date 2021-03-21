@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html class="maxHeight">
+    
+<head>
+	<title>Control</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" href="fontawesome_all.css" >
+	<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+	
+</head>
+<body>
+
+
+	<div  class="container-fluid maxHeight" style="margin-top:5px">
+		<div class="row">
+			<div class="table-responsive"> 
+			 <!--cHANGED TABLE-->
+				<table class="table table-hover table-sm" id="table_1" style="background-color:#ADD8E6">
+					<thead>
+					  <tr>
+						<th style="width:30%"><center>COM</center></th>
+						<th style="width:30%"><center>BAUD RATE</center></th>
+						<th style="width:20%"><center>STATE</center></th>
+						<!--<th style="width:20%">Status</th>-->
+					  </tr>
+					</thead>
+					<tbody><!-- onclick="window.location='values.html'" -->
+						<tr>
+							<td>
+								<div class="">
+									<select class="custom-select" id="com_port" required onclick="listPorts()">
+									<option selected disabled value="null">Select</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<div class="">
+									<select class="custom-select" id="com_boud" required>
+									<option selected value=9600>9600</option>
+									<option value=19200>19200</option>
+									<option value=38400>38400</option>
+									<option value=57600>57600</option>
+									<option value=74880>74880</option>
+									<option value=115200>115200</option>
+									</select>
+								</div>
+							</td>
+							<td>
+								<center>
+									<button id='connect' class="btn btn-primary" type="submit" >Connect</button>
+								</center>
+							</td>
+							<!--<td>
+								<b id='status'>Not Connected   </b>
+							</td>-->
+						</tr>	 
+					</tbody>
+				</table>
+			</div>
+
+			
+		</div>
+		
+
+		<div class="row">
+
+			<div class="col-sm-5">
+				<input type="text" id="sendtext" name="sendtext" style="width: 100%">
+			</div>
+			<div class="col-sm-1">
+				<button id='sendData' class="btn btn-primary btn-sm" type="submit" style="width: 100%;text-align:center">Send</button>
+			</div>
+			<div class="col-sm-2">
+					
+			</div>
+
+			<div class="col-sm-2">
+				<select class="custom-select" id="com_line_ending" required>
+				<option selected value=0>No Line Ending</option>
+				<option value=1>Newline</option>
+				<option value=2>Carriage Return</option>
+				<option value=3>Both NL & CR</option>
+				</select>
+			</div>
+			<div class="col-sm-2">
+				<button id='clearOutput' class="btn btn-primary btn-sm" type="submit" style="width: 100%;text-align:center">Clear Output</button>
+			</div>
+		</div>
+
+		<div class="row">
+			<hr style="width:100%;text-align:center;margin-left:0%;color:gray;background-color:gray;height:1px">
+		</div>
+		<div class="row">
+			<div id="dataArea" style="overflow: scroll;width: 100%">
+				<p id="serialData"> asdfasdfasdfaddfasdfasdfasdfasdfads</p>
+			</div>
+
+		</div>
+		
+
+</div>
+	
+
+<script>
+window.jQuery = window.$ = require('jquery');
+</script>
+
+
+</body>
+<script type="text/javascript" src="homePage.js"></script>
+</html>
