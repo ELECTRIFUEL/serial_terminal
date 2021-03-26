@@ -2,15 +2,13 @@
 <html class="maxHeight">
     
 <head>
-	<title>Control</title>
+	<title>Serial Terminal</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" href="fontawesome_all.css" >
 	<link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
 	
 </head>
 <body>
-
-
 	<div  class="container-fluid maxHeight" style="margin-top:5px">
 		<div class="row">
 			<div class="table-responsive"> 
@@ -70,15 +68,17 @@
 			<div class="col-sm-1">
 				<button id='sendData' class="btn btn-primary btn-sm" type="submit" style="width: 100%;text-align:center">Send</button>
 			</div>
-			<div class="col-sm-2">
-					
+			<div class="col-sm-2">	
+				  <input style="margin-top:10px" class="form-check-input" type="checkbox" value="" id="autoscroll" checked=true>
+				  <label class="form-check-label" for="autoscroll">Autoscroll
+				  </label>	
 			</div>
 
 			<div class="col-sm-2">
 				<select class="custom-select" id="com_line_ending" required>
-				<option selected value=0>No Line Ending</option>
+				<option value=0>No Line Ending</option>
 				<option value=1>Newline</option>
-				<option value=2>Carriage Return</option>
+				<option selected value=2>Carriage Return</option>
 				<option value=3>Both NL & CR</option>
 				</select>
 			</div>
@@ -91,7 +91,7 @@
 			<hr style="width:100%;text-align:center;margin-left:0%;color:gray;background-color:gray;height:1px">
 		</div>
 		<div class="row">
-			<div id="dataArea" style="overflow: scroll;width: 100%">
+			<div id="dataArea" style="overflow: scroll;width: 100%;text-align:left">
 				<p id="serialData"></p>
 			</div>
 

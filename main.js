@@ -21,6 +21,7 @@ const os = require('os');
 // state:0 means not connected, state:1 means error connecting, state:2 means connected
 var portConfig = {"port":"", "boud":9600, "state":0}
 var portObj = null
+var dataObj = {"filenameSave":"output.txt"}
 
 
 
@@ -69,7 +70,7 @@ function createWindow () {
               {
                 label:'Save',
                 click(){
-                  console.log("call")
+                  //console.log("call")
                   saveFile(false)
                 }
               },
@@ -88,7 +89,7 @@ function createWindow () {
               }
           ]
       },
-      {
+      /*{
         label: 'Settings',
         submenu: [
           {
@@ -104,15 +105,15 @@ function createWindow () {
             }
           }
         ]
-      }
+      }*/
   ])
-  //Menu.setApplicationMenu(menu); 
+  Menu.setApplicationMenu(menu); 
 
   // and load the index.html of the app.
   win.loadFile('main.html')
   //win.removeMenu()
   // Open the DevTools.
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
 
   
 }
@@ -154,11 +155,13 @@ ipcMain.on("connectPort", (event, data) => {
       portObj.open(function (err) {
         if (err) {
           portConfig.state=1
+          console.log("errorrrr")
+          console.log(err)
         }else{
           portConfig.state=2
 
           portObj.on('data', function (data) {
-            console.log('Data:', data.toString())
+            //console.log('Data:', data.toString())
             win.webContents.send('serialData', data.toString());
           })
 
@@ -262,7 +265,7 @@ function openFile(){
     properties: ['openFile']
   }).then(result => {
     if(result.canceled==false){
-      console.log(result.filePaths)
+      //console.log(result.filePaths)
       win.setTitle(result.filePaths[0])
       win.webContents.send('LOAD_FILE', result.filePaths[0]);
     }
@@ -277,17 +280,17 @@ function saveFile(flag){
   if(flag || dataObj.filenameSave=="" ){
     let options = {
     //Placeholder 1
-    title: "Save file - TimeProgram",
+    title: "Save file - Output",
 
     //Placeholder 2
-    defaultPath : "timeProgram",
+    defaultPath : "output.txt",
 
     //Placeholder 4
-    buttonLabel : "Save Time Program",
+    buttonLabel : "Save Output",
 
     //Placeholder 3
     filters :[
-    {name: 'All Files', extensions: ['*']}
+      {name: 'All Files', extensions: ['*']}
     ]
     }
     //var WIN = remote.getCurrentWindow();
@@ -297,7 +300,7 @@ function saveFile(flag){
       win.webContents.send('SAVE_FILE', result.filePath);
     })
   }else{
-    win.setTitle(dataObj.filenameSave)
+    win.setTitle("Serial Terminal- "+dataObj.filenameSave)
     win.webContents.send('SAVE_FILE', dataObj.filenameSave);
   }
 }

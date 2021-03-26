@@ -4,11 +4,15 @@ var fs = require('fs')
 var infoA =0
 var infoB =0
 var conState = null;
+var preDataList = []
+var listIndex = 0;
+var newState = false
 //const { dialog } = require('electron').remote
 //var dataObj;
 $(document).ready(function(){
  
   listPorts()
+  updateWindowSize()
   conState = ipcRenderer.sendSync("connectPort", null)
 
 
@@ -38,6 +42,18 @@ $(document).ready(function(){
     }
   })
 
+
+
+  ipcRenderer.on("SAVE_FILE", (event, data) =>{
+      saveOutput(data)
+  })
+
+  ipcRenderer.on("LOAD_FILE", (event, data) =>{
+      loadOutput(data)
+  })
+
+
+
   ipcRenderer.on("serialData", (event, data) =>{
     //console.log(data)
     appendData(data)
@@ -52,12 +68,7 @@ $(document).ready(function(){
   });
 
   $(window).on('resize', function(){
-      var offsets = $('#dataArea').offset();
-      var top = offsets.top;
-      var left = offsets.left;
-      var wheight = $(window).height();
-
-      $('#dataArea').height(wheight-top);
+      updateWindowSize()
       //console.log(wheight)
   });
 
@@ -72,6 +83,18 @@ $(document).keydown( function( e ) {
    
    if(e.which==13){
      sendData();
+   }else if(e.which==38){
+     //upper key
+     if(listIndex>0){
+       listIndex--
+       $("#sendtext").val(preDataList[listIndex])
+     }
+   }else if(e.which==40){
+     //lower key
+     if(listIndex<preDataList.length-1){
+       listIndex++
+       $("#sendtext").val(preDataList[listIndex])
+     }
    }
     
   }
@@ -84,6 +107,17 @@ $(document).keydown( function( e ) {
 
 
 
+function updateWindowSize(){
+  var offsets = $('#dataArea').offset();
+  var top = offsets.top;
+  var left = offsets.left;
+  var wheight = $(window).height();
+
+  $('#dataArea').height(wheight-top);
+}
+
+
+
 
 function appendData(data){
 
@@ -93,12 +127,24 @@ function appendData(data){
   for(var i=0;i<data.length;i++){
     if(data.charCodeAt(i)==10){
       data1 += "<br>";
+      newState = true
     }else{
+      if(newState){
+        var d = new Date();
+        var hr = d.getHours().toString().padStart(2,"0")
+        var min = d.getMinutes().toString().padStart(2,"0")
+        var sec = d.getSeconds().toString().padStart(2,"0")
+
+        var time =hr+":"+min+":"+sec+"."+d.getMilliseconds().toString().padStart(3,"0");
+        data1 += time+"-> "
+        newState = false
+      }
       data1 += data.charAt(i)
     }
   }
   $("#serialData").html(data1)
-  var autoscroll = true;
+  var autoscroll = $("#autoscroll").prop("checked")
+  //console.log(autoscroll)
   if(autoscroll){
     var objDiv = document.getElementById("dataArea");
     objDiv.scrollTop = objDiv.scrollHeight;
@@ -110,7 +156,12 @@ function appendData(data){
 function sendData(){
   var data = $("#sendtext").val()
   var end = $("#com_line_ending").val()
-  //console.log(data)
+  listIndex = preDataList.length
+  if(data.localeCompare(preDataList[listIndex-1])!=0){
+    preDataList.push(data)
+    listIndex++
+  }
+  
   if(end==1){
    data += '\n';
   }else if(end==2){
@@ -121,6 +172,7 @@ function sendData(){
   //console.log(data)
   //appendData(data)
   ipcRenderer.sendSync("serialDataSend", data)
+  
   $("#sendtext").val("")
 }
 
@@ -209,6 +261,38 @@ function loadSavedPorts(filename){
     });
 }
 
+
+function saveOutput(filename){
+  var data1 = $("#serialData").html()
+  fs.writeFile(filename, data1, err=>{
+    if(err){
+      console.log("Error saving data")
+      //dialog.showErrorBox("Error", "Unable to save data");
+      //ipcRenderer.send('dataSave','false')
+    }else{
+      
+    }
+  })
+}
+
+
+function loadOutput(filename){
+  console.log(filename)
+  fs.readFile(filename, function(err, resdata) {
+    if(err){
+      console.log(err);
+      //dialog.showErrorBox("Error", "Unable to load data");
+      return;
+    }
+    try{
+      //console.log(resdata)
+      $("#serialData").html(resdata.toString())
+    }catch(e){
+      console.log(e)
+    }
+    
+  });
+}
 
 
 function saveSavedPorts(filename){
