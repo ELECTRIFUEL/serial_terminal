@@ -87,8 +87,16 @@ $(document).keydown( function( e ) {
      //upper key
      if(listIndex>0){
        listIndex--
-       $("#sendtext").val(preDataList[listIndex])
+       $("#sendtext").focus().val(preDataList[listIndex])
+       
+        //$("#sendtext").focus()
      }
+
+     setTimeout(function(){
+         var input = document.getElementById("sendtext");
+            input.focus();
+            input.setSelectionRange(input.value.length,input.value.length);
+       },1);
    }else if(e.which==40){
      //lower key
      if(listIndex<preDataList.length-1){
