@@ -122,7 +122,8 @@ function updateWindowSize(){
 function appendData(data){
 
 
-  var data1 = $("#serialData").html()
+  //var data1 = $("#serialData").html()
+  var data1 = ""
   //console.log("start")
   for(var i=0;i<data.length;i++){
     if(data.charCodeAt(i)==10){
@@ -134,15 +135,17 @@ function appendData(data){
         var hr = d.getHours().toString().padStart(2,"0")
         var min = d.getMinutes().toString().padStart(2,"0")
         var sec = d.getSeconds().toString().padStart(2,"0")
-
+        //console.log(d.getTime())
         var time =hr+":"+min+":"+sec+"."+d.getMilliseconds().toString().padStart(3,"0");
         data1 += time+"-> "
+        //data1 += d.getTime().toString() +"=> "
         newState = false
       }
       data1 += data.charAt(i)
     }
   }
-  $("#serialData").html(data1)
+  $("#serialData").append(data1)
+  //$("#serialData").html(data1)
   var autoscroll = $("#autoscroll").prop("checked")
   //console.log(autoscroll)
   if(autoscroll){
