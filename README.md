@@ -18,3 +18,12 @@ Build instructions :- https://www.electron.build/cli
 			electron-builder -w --ia32
 	-Win 64
 			electron-builder -w --x64
+
+
+Build insructios for go script :- 
+
+env GOOS=windows GOARCH=amd64 go build package-import-path
+env GOOS=windows GOARCH=386 go build package-import-path
+
+env GOOS=linux GOARCH=amd64 go build package-import-path
+env GOOS=linux GOARCH=386 go build package-import-path

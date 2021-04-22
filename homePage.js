@@ -17,6 +17,7 @@ $(document).ready(function(){
 
 
   ipcRenderer.on("portList", (event, data) =>{
+    //console.log(data)
     if(data!=null){
       showPorts(data)
     }
@@ -152,7 +153,17 @@ function appendData(data){
       data1 += data.charAt(i)
     }
   }
-  $("#serialData").append(data1)
+ 
+    var temp = $("#serialData").html()
+    if(temp.length<10000){
+    //if(true){
+      $("#serialData").append(data1)
+    }else{
+      temp = temp + data1
+      var len = temp.length
+      temp = temp.slice(len-10000, len)
+      $("#serialData").html(temp)
+    }
   //$("#serialData").html(data1)
   var autoscroll = $("#autoscroll").prop("checked")
   //console.log(autoscroll)

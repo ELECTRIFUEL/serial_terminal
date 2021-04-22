@@ -1,11 +1,10 @@
 {
   "name": "Serial_Terminal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Serial Terminal application",
   "main": "main.js",
   "scripts": {
-    "test": "electron .",
-    "install": "electron-rebuild"
+    "test": "electron ."
   },
   "repository": {
     "type": "git",
@@ -20,17 +19,14 @@
   "dependencies": {
     "bootstrap": "^5.0.0-beta3",
     "electron-modal": "^1.0.0",
-    "jquery": "^3.5.1",
-    "serialport": "^9.0.6"
+    "jquery": "^3.5.1"
   },
   "devDependencies": {
-    "electron": "^11.2.0",
-    "electron-rebuild": "^2.3.5"
+    "electron": "^11.2.0"
   },
   "build": {
     "extraResources": [
       "**/extraResources/**"
-    ],
-    "buildDependenciesFromSource": true
+    ]
   }
 }
