@@ -1,5 +1,5 @@
 # serial_terminal
-Multiplateform serial terminal based on Electron. 
+Multiplatform serial terminal based on Electron. 
 
 
 
